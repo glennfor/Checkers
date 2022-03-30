@@ -125,41 +125,63 @@ class InternalBoard():
                 #right-forward
                 i = row - 1
                 j = col + 1
+                byPass = False
                 while(i >= 0 and j < GRID_SIZE):
                     if self.board[i][j] and self.board[i][j].type == SIDES[1]:
                         break
+                    if byPass and self.board[i][j] and self.board[i][j].type == SIDES[0]:
+                        break
+                    if self.board[i][j] and self.board[i][j].type == SIDES[0]:
+                        byPass = True
                     if not isinstance(self.board[i][j], Piece):
                         allMoves.append((i,j))
                     i, j = i-1, j+1
+                    
 
+                
+                #left-forward
                 i = row - 1
                 j = col - 1
-
-                #left-forward
+                byPass = False
                 while(i >= 0 and j >= 0):
                     if self.board[i][j] and self.board[i][j].type == SIDES[1]:
                         break
+                    if byPass and self.board[i][j] and self.board[i][j].type == SIDES[0]:
+                        break
+                    if self.board[i][j] and self.board[i][j].type == SIDES[0]:
+                        byPass = True
                     if not isinstance(self.board[i][j], Piece):
                         allMoves.append((i,j))
                     i, j = i-1, j-1
 
+
                 #right side forward
                 i = row + 1
                 j = col + 1
+                byPass = False
                 while(i < GRID_SIZE and j < GRID_SIZE):
                     if self.board[i][j] and self.board[i][j].type == SIDES[1]:
                         break
+                    if byPass and self.board[i][j] and self.board[i][j].type == SIDES[0]:
+                        break
+                    if self.board[i][j] and self.board[i][j].type == SIDES[0]:
+                        byPass = True
                     if not isinstance(self.board[i][j], Piece):
                         allMoves.append((i,j))
                     i, j = i+1, j+1
 
+                
+                #left side forward
                 i = row + 1
                 j = col - 1
-
-                #left side forward
+                byPass = False
                 while(i < GRID_SIZE and j >= 0):
                     if self.board[i][j] and self.board[i][j].type == SIDES[1]:
                         break
+                    if byPass and self.board[i][j] and self.board[i][j].type == SIDES[0]:
+                        break
+                    if self.board[i][j] and self.board[i][j].type == SIDES[0]:
+                        byPass = True
                     if not isinstance(self.board[i][j], Piece):
                         allMoves.append((i,j))
                     i, j = i+1, j-1
@@ -186,50 +208,111 @@ class InternalBoard():
                                 if not isinstance(self.board[row+2][col+2], Piece):
                                     allMoves.append((row+2, col+2))
             if piece.isKing:
+
                 #right side forward
                 i = row + 1
                 j = col + 1
+                byPass = False
                 while(i < GRID_SIZE and j < GRID_SIZE):
                     if self.board[i][j] and self.board[i][j].type == SIDES[0]:
                         break
+                    if byPass and self.board[i][j] and self.board[i][j].type == SIDES[1]:
+                        break
+                    if self.board[i][j] and self.board[i][j].type == SIDES[1]:
+                        byPass = True
                     if not isinstance(self.board[i][j], Piece):
                         allMoves.append((i,j))
                     i, j = i+1, j+1
 
-                i = row + 1
-                j = col - 1
+                
 
                 #left side forward
+                i = row + 1
+                j = col - 1
+                byPass = False
                 while(i < GRID_SIZE and j >= 0):
                     if self.board[i][j] and self.board[i][j].type == SIDES[0]:
                         break
+                    if byPass and self.board[i][j] and self.board[i][j].type == SIDES[1]:
+                        break
+                    if self.board[i][j] and self.board[i][j].type == SIDES[1]:
+                        byPass = True
                     if not isinstance(self.board[i][j], Piece):
                         allMoves.append((i,j))
                     i, j = i+1, j-1
 
+
                 #right-forward
                 i = row - 1
                 j = col + 1
+                byPass = False
                 while(i >= 0 and j < GRID_SIZE):
                     if self.board[i][j] and self.board[i][j].type == SIDES[0]:
                         break
+                    if byPass and self.board[i][j] and self.board[i][j].type == SIDES[1]:
+                        break
+                    if self.board[i][j] and self.board[i][j].type == SIDES[1]:
+                        byPass = True
                     if not isinstance(self.board[i][j], Piece):
                         allMoves.append((i,j))
                     i, j = i-1, j+1
 
-                i = row - 1
-                j = col - 1
+                
 
                 #left-forward
+                i = row - 1
+                j = col - 1
+                byPass = False
                 while(i >= 0 and j >= 0):
                     if self.board[i][j] and self.board[i][j].type == SIDES[0]:
                         break
+                    if byPass and self.board[i][j] and self.board[i][j].type == SIDES[1]:
+                        break
+                    if self.board[i][j] and self.board[i][j].type == SIDES[1]:
+                        byPass = True
                     if not isinstance(self.board[i][j], Piece):
                         allMoves.append((i,j))
                     i, j = i-1, j-1
 
 
         return allMoves
+    
+    def checkBoardState(self,) -> tuple:
+        players: list = []
+        opponents: list = []
+        for i in range(GRID_SIZE):
+            for j in range(GRID_SIZE):
+                piece = self.board[i][j]
+                if piece and isinstance(piece, Piece):
+                    if piece.type == SIDES[0]:
+                        players.append((i,j))
+                    else:
+                        opponents.append((i,j))
+
+        if players == [] or opponents == []:
+            return CHECKMATE
+
+        noMove:bool  = True
+
+        for i, j in players:
+            if self.getPossibleMoves(i,j) != []:
+                noMove = False
+                break
+        if noMove:
+            return STALEMATE
+        
+        noMove = True
+        for i, j in opponents:
+            if self.getPossibleMoves(i,j) != []:
+                noMove = False
+                break
+        if noMove:
+            return STALEMATE
+
+        return UNFINISHED
+
+
+
 
 
 
@@ -334,7 +417,15 @@ class UIBoard():
        
         return self.internalBoard.movePiece(randomPosition, randomPositionTo)
 
+    def checkBoardState(self, opponent):
+        state = self.internalBoard.checkBoardState()
+        if state== UNFINISHED:
+            return False
         
+        color = (YELLOW if state == STALEMATE else GREEN)
+       
+        surface = font.render(state, 1, color)
+        return surface
 
     def updateUI(self):
         self.drawBoard()
@@ -361,8 +452,12 @@ def runGame():
     selectedPiecePosition = None
     whoseTurn = SIDES[1]
 
+    conclusion = None
+
     PLAYER_ONE = whoseTurn
     PLAYER_TWO = SIDES[0]
+
+    OPPONENT = COMPUTER_RANDOM
 
     timeDelta = 0
 
@@ -373,6 +468,11 @@ def runGame():
 
         mousePosition = pygame.mouse.get_pos()
         moved = False
+        
+        conclusion = gameBoard.checkBoardState(OPPONENT)
+        if conclusion:
+            running = False 
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -405,8 +505,12 @@ def runGame():
                             
                             if whoseTurn == PLAYER_ONE:
                                 moved = gameBoard.movePieceTo(clickPosition,selectedPiecePosition , whoseTurn)
-        if whoseTurn == PLAYER_TWO and time.time() - timeDelta > IMPRESSION_TIME:
-            moved = gameBoard.computerMove(PLAYER_TWO)
+        if whoseTurn == PLAYER_TWO:
+            if OPPONENT == HUMAN:
+                moved = gameBoard.movePieceTo(clickPosition,selectedPiecePosition , whoseTurn)
+            elif time.time() - timeDelta > IMPRESSION_TIME:
+                isAI = OPPONENT == COMPUTER_AI
+                moved = gameBoard.computerMove(whoseTurn, isAI)
         
         if moved:
             PLAY.play()
@@ -424,4 +528,13 @@ def runGame():
 
         pygame.display.update()
     
+    if conclusion:
+        pygame.mixer.music.stop()
+        GAME_END.play()
+        pygame.draw.rect(WINDOW, WHITE, conclusion.get_rect().move(int(WINDOW_MARGIN_X*1.2), WINDOW_HEIGHT//2-60))
+        WINDOW.blit(conclusion, (int(WINDOW_MARGIN_X*1.2), WINDOW_HEIGHT//2-60))
+        pygame.display.update()
+        pygame.time.wait(int(8000))
+    pygame.time.wait(int(1000))
+    print(conclusion)
     pygame.quit()

@@ -37,6 +37,8 @@ RED = (200, 0, 0)
 BLUE = (0, 0, 200)
 GREEN = (0, 255, 0)
 
+YELLOW = (255, 255, 0)
+
 BORDER_COLOR = getColor("#7777FF")
 BACKGROUND_COLOR = getColor("#000000")
 
@@ -51,11 +53,23 @@ DOWN_DIRECTION = 1
 IMPRESSION_TIME = 1000 / 1000
 
 
-GRID_SIZE = 8
+GRID_SIZE = 7
 LEVELS = 3 #number of rows container players
 
 SIDES = [('Chelsea', pygame.Color(0, 0, 200, 200)), ('Arsernal', RED)]
 PLAYERS_PER_SIDE = (GRID_SIZE//2) * 3
+
+#opponent
+
+COMPUTER_AI = 'Computer'
+COMPUTER_RANDOM = 'Random Computer'
+COMPUTER_PSEUDO_AI = 'Pseudo AI Computer'
+HUMAN = 'Human'
+
+#game states
+UNFINISHED = 'UNFINISHED'
+STALEMATE = 'STALEMATE'
+CHECKMATE = 'CHECKMATE'
 
 #[WINDOW]
 WINDOW_WIDTH = 800
@@ -73,10 +87,16 @@ WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.DOUBLEBUF
 pygame.display.set_caption("Checkers")
 pygame.display.set_icon(pygame.image.load("./assets/buttons-3.png"))
 
+#main font
+
+font = pygame.font.SysFont('Deja Vu Sans', 100, True)
 
 #[SOUNDS]
 PLAY = pygame.mixer.Sound('./assets/Cgame-alert.wav')
 PLAY.set_volume(100)
+
+
+GAME_END  = pygame.mixer.Sound('./assets/fanfare.wav')
 
 
 
