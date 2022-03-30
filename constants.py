@@ -53,7 +53,7 @@ DOWN_DIRECTION = 1
 IMPRESSION_TIME = 1000 / 1000
 
 
-GRID_SIZE = 7
+GRID_SIZE = 8
 LEVELS = 3 #number of rows container players
 
 SIDES = [('Chelsea', pygame.Color(0, 0, 200, 200)), ('Arsernal', RED)]
